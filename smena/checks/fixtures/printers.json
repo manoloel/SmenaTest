@@ -1,0 +1,42 @@
+[
+ {
+    "model": "checks.printer",
+    "pk": 1,
+    "fields": {
+	"api_key" : "12",
+	"name" : "12",
+	"check_type" :"C",
+	"point_id" : 1
+    }
+  },
+  {
+    "model": "checks.printer",
+    "pk": 2,
+    "fields": {
+	"api_key" : "21",
+	"name" : "21",
+	"check_type" : "K",
+	"point_id" : 1
+    }
+ },
+ {
+    "model": "checks.printer",
+    "pk": 3,
+    "fields": {
+	"api_key" : "123",
+	"name" : "123",
+	"check_type" :"C",
+	"point_id" : 2
+    }
+  },
+  {
+    "model": "checks.printer",
+    "pk": 4,
+    "fields": {
+	"api_key" : "321",
+	"name" : "321",
+	"check_type" : "K",
+	"point_id" : 2
+    }
+ }
+]
