@@ -2,13 +2,11 @@ from django.shortcuts import render, render_to_response
 from smena.settings import BASE_DIR
 from wsgiref.util import FileWrapper
 from django.core.exceptions import ObjectDoesNotExist
-from django.template.loader import render_to_string
 from django.core import serializers
 from django.http import JsonResponse, HttpResponse
-from django_rq import job
-from io import StringIO
-import json, requests, base64
+import json
 from .models import Printer, Check
+from .tasks import create_pdf
 from django.db.models import Q
 
 # Create your views here.
@@ -64,32 +62,3 @@ def check(request):
 		check.status = Check.PRINTED
 		check.save()
 		return response
-
-
-@job
-def create_pdf(check_id):
-	check = Check.objects.get(pk=check_id)
-	context = {
-	'check': check
-	}
-	if check.type == Check.KITCHEN:
-		html = render_to_string('kitchen_check.html', context=context)
-	else:
-		html = render_to_string('client_check.html', context=context)
-	url = 'http://localhost:80/'
-	utf = html.encode('utf-8')
-	base = base64.b64encode(utf)
-	html = base.decode('utf-8')
-	data = {
-	    'contents': html,
-		}
-	headers = {
-	    'Content-Type': 'application/json'
-	}
-	response = requests.post(url, data=json.dumps(data), headers=headers)
-	filename = BASE_DIR+'/media/pdf/'+str(check.order['id'])+'_'+check.get_type_display()+'.pdf'
-	with open(filename, 'wb') as f:
-	    f.write(response.content)
-	check.status = Check.RENDERED
-	check.pdf_file = filename
-	check.save()
