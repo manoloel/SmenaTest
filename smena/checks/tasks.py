@@ -2,7 +2,7 @@ from django_rq import job
 from django.template.loader import render_to_string
 from .models import Check
 from smena.settings import BASE_DIR
-import base64, requests
+import base64, requests, json
 
 @job
 def create_pdf(check_id):
